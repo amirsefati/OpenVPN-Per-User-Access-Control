@@ -14,6 +14,7 @@ apt-get install -y \
   openvpn easy-rsa ipset iptables-persistent dnsmasq curl
 
 mkdir -p /etc/openvpn/ccd /var/log/openvpn /var/log/dnsmasq
+mkdir -p /etc/openvpn/server
 touch /var/log/openvpn/status.log /var/log/openvpn/openvpn.log /var/log/dnsmasq/queries.log
 
 if ! grep -q '^net.ipv4.ip_forward=1' /etc/sysctl.conf; then
@@ -23,7 +24,6 @@ sysctl -p
 
 cp "$PROJECT_DIR/dnsmasq/vpn-access.conf" /etc/dnsmasq.d/vpn-access.conf
 systemctl enable dnsmasq
-systemctl restart dnsmasq
 
 if [ ! -d /etc/openvpn/easy-rsa/pki ]; then
   make-cadir /etc/openvpn/easy-rsa
@@ -39,7 +39,7 @@ python3 -m venv "$VENV_DIR"
 "$VENV_DIR/bin/pip" install --upgrade pip
 "$VENV_DIR/bin/pip" install -r "$PROJECT_DIR/backend/requirements.txt"
 
-cp "$PROJECT_DIR/openvpn/server.conf.template" /etc/openvpn/server.conf
+cp "$PROJECT_DIR/openvpn/server.conf.template" /etc/openvpn/server/server.conf
 cp "$PROJECT_DIR/scripts/openvpn-connect.sh" /usr/local/bin/openvpn-connect.sh
 cp "$PROJECT_DIR/scripts/openvpn-disconnect.sh" /usr/local/bin/openvpn-disconnect.sh
 chmod +x /usr/local/bin/openvpn-connect.sh /usr/local/bin/openvpn-disconnect.sh
@@ -52,8 +52,9 @@ sed -i "s|__APP_GROUP__|$APP_GROUP|g" /etc/systemd/system/vpn-manager.service
 systemctl daemon-reload
 systemctl enable vpn-manager.service
 systemctl restart vpn-manager.service
-systemctl enable openvpn@server || true
-systemctl restart openvpn@server || systemctl restart openvpn || true
+systemctl enable openvpn-server@server
+systemctl restart openvpn-server@server
+systemctl restart dnsmasq
 
 iptables -P FORWARD DROP
 iptables -C FORWARD -i tun0 ! -d 10.8.0.1 -p udp --dport 53 -j REJECT 2>/dev/null || iptables -A FORWARD -i tun0 ! -d 10.8.0.1 -p udp --dport 53 -j REJECT
@@ -62,4 +63,3 @@ iptables -t nat -C POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE 2>/dev/null 
 iptables-save > /etc/iptables/rules.v4
 
 echo "Setup complete. API/UI should be available on port 8000."
-
