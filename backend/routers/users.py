@@ -81,6 +81,9 @@ def download_config(user_id: int, db: Session = Depends(get_db)):
     user = db.query(VpnUser).filter(VpnUser.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    content = generate_ovpn(user.username)
+    try:
+        content = generate_ovpn(user.username)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
     headers = {"Content-Disposition": f'attachment; filename="{user.username}.ovpn"'}
     return Response(content=content, media_type="application/x-openvpn-profile", headers=headers)

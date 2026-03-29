@@ -56,18 +56,18 @@ def remove_ccd(username: str) -> None:
         ccd_path.unlink()
 
 
-def _read_or_placeholder(path: Path, label: str) -> str:
-    if path.exists():
-        return path.read_text(encoding="utf-8").strip()
-    return f"# Missing {label}: {path}"
+def _read_required(path: Path, label: str) -> str:
+    if not path.exists():
+        raise FileNotFoundError(f"Missing {label}: {path}")
+    return path.read_text(encoding="utf-8").strip()
 
 
 def generate_ovpn(username: str) -> str:
     pki_dir = settings.easy_rsa_dir / "pki"
-    ca = _read_or_placeholder(pki_dir / "ca.crt", "CA certificate")
-    cert = _read_or_placeholder(pki_dir / "issued" / f"{username}.crt", "client certificate")
-    key = _read_or_placeholder(pki_dir / "private" / f"{username}.key", "client key")
-    tls_auth = _read_or_placeholder(settings.openvpn_base_dir / "ta.key", "tls-auth key")
+    ca = _read_required(pki_dir / "ca.crt", "CA certificate")
+    cert = _read_required(pki_dir / "issued" / f"{username}.crt", "client certificate")
+    key = _read_required(pki_dir / "private" / f"{username}.key", "client key")
+    tls_auth = _read_required(settings.openvpn_base_dir / "ta.key", "tls-auth key")
 
     return f"""client
 dev tun
