@@ -30,12 +30,24 @@ def write_ccd(username: str, vpn_ip: str) -> Path:
 def create_user(username: str, vpn_ip: str) -> None:
     settings.client_output_dir.mkdir(parents=True, exist_ok=True)
     write_ccd(username, vpn_ip)
-    run_command([str(settings.easy_rsa_dir / "easyrsa"), "build-client-full", username, "nopass"])
+    run_command(
+        [str(settings.easy_rsa_dir / "easyrsa"), "build-client-full", username, "nopass"],
+        cwd=settings.easy_rsa_dir,
+        env={"EASYRSA_BATCH": "1"},
+    )
 
 
 def revoke_user(username: str) -> None:
-    run_command([str(settings.easy_rsa_dir / "easyrsa"), "--batch", "revoke", username])
-    run_command([str(settings.easy_rsa_dir / "easyrsa"), "gen-crl"])
+    run_command(
+        [str(settings.easy_rsa_dir / "easyrsa"), "--batch", "revoke", username],
+        cwd=settings.easy_rsa_dir,
+        env={"EASYRSA_BATCH": "1"},
+    )
+    run_command(
+        [str(settings.easy_rsa_dir / "easyrsa"), "gen-crl"],
+        cwd=settings.easy_rsa_dir,
+        env={"EASYRSA_BATCH": "1"},
+    )
 
 
 def remove_ccd(username: str) -> None:
@@ -83,4 +95,3 @@ key-direction 1
 {tls_auth}
 </tls-auth>
 """
-

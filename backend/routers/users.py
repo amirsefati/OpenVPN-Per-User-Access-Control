@@ -32,13 +32,17 @@ def create_vpn_user(payload: UserCreate, db: Session = Depends(get_db)):
     taken_ips = {row.vpn_ip for row in db.query(VpnUser.vpn_ip).all()}
     vpn_ip = allocate_vpn_ip(taken_ips)
     user = VpnUser(username=payload.username, vpn_ip=vpn_ip)
+    try:
+        create_user(user.username, user.vpn_ip)
+        create_user_ipset(user.username)
+        add_forward_rule(user.username, user.vpn_ip)
+    except Exception as exc:
+        remove_ccd(user.username)
+        raise HTTPException(status_code=500, detail=f"Failed to provision VPN user: {exc}") from exc
+
     db.add(user)
     db.commit()
     db.refresh(user)
-
-    create_user(user.username, user.vpn_ip)
-    create_user_ipset(user.username)
-    add_forward_rule(user.username, user.vpn_ip)
     return UserResponse.model_validate(user, from_attributes=True)
 
 
