@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VPN Manager Login</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="login-body">
+  <main class="login-card">
+    <h1>OpenVPN Access Manager</h1>
+    <p>Single-admin control plane for per-user internet access.</p>
+    <form id="login-form">
+      <label>Username</label>
+      <input id="username" value="admin" required>
+      <label>Password</label>
+      <input id="password" type="password" required>
+      <button type="submit">Sign In</button>
+      <p id="login-error" class="error"></p>
+    </form>
+  </main>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/auth.js"></script>
+</body>
+</html>
+

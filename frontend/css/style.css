@@ -1,0 +1,160 @@
+:root {
+  --bg: #10161d;
+  --panel: #17212b;
+  --panel-alt: #1d2a36;
+  --border: #28394a;
+  --text: #e7eef5;
+  --muted: #95a8ba;
+  --accent: #48c78e;
+  --danger: #ef6f6c;
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(72, 199, 142, 0.12), transparent 30%),
+    linear-gradient(180deg, #0c1117, #131a22 60%, #0f141a);
+  color: var(--text);
+}
+
+.login-body {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.login-card,
+.panel {
+  background: rgba(23, 33, 43, 0.92);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.login-card {
+  width: min(420px, calc(100vw - 32px));
+  padding: 28px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px 0;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr 1.2fr;
+  gap: 20px;
+  padding: 20px 24px 24px;
+}
+
+.panel {
+  min-height: 70vh;
+  padding: 18px;
+}
+
+.panel-header,
+.tabs,
+.button-row,
+.inline-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.panel-header {
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.list {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  background: var(--panel-alt);
+  border-radius: 12px;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #6c7a89;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.status-dot.online {
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(72, 199, 142, 0.8);
+}
+
+input,
+button {
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  font: inherit;
+}
+
+input {
+  background: #10161d;
+  color: var(--text);
+  width: 100%;
+}
+
+button {
+  background: #223344;
+  color: var(--text);
+  cursor: pointer;
+}
+
+button.active {
+  background: var(--accent);
+  color: #08120d;
+}
+
+button.danger {
+  background: var(--danger);
+  color: white;
+}
+
+.muted,
+.detail-empty {
+  color: var(--muted);
+}
+
+.error {
+  color: var(--danger);
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    min-height: auto;
+  }
+}
+

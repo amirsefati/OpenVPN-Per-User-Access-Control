@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VPN Manager Dashboard</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="dashboard-body">
+  <header class="topbar">
+    <h1>OpenVPN Access Manager</h1>
+    <button id="logout-btn">Logout</button>
+  </header>
+  <main class="dashboard-grid">
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Users</h2>
+      </div>
+      <form id="create-user-form" class="inline-form">
+        <input id="new-username" placeholder="new username" required>
+        <button type="submit">Create</button>
+      </form>
+      <div id="user-list" class="list"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>User Detail</h2>
+      </div>
+      <div id="user-detail" class="detail-empty">Select a user.</div>
+      <div id="user-actions" class="hidden">
+        <div id="user-meta"></div>
+        <div class="button-row">
+          <button id="download-config-btn">Download .ovpn</button>
+          <button id="delete-user-btn" class="danger">Revoke</button>
+        </div>
+        <h3>Allowed Domains</h3>
+        <form id="add-domain-form" class="inline-form">
+          <input id="new-domain" placeholder="github.com" required>
+          <button type="submit">Add</button>
+        </form>
+        <div id="domain-list" class="list"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Logs</h2>
+      </div>
+      <div class="tabs">
+        <button id="tab-dns" class="active">DNS</button>
+        <button id="tab-connections">Connections</button>
+      </div>
+      <div id="log-content" class="list"></div>
+    </section>
+  </main>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/auth.js"></script>
+  <script src="/static/js/users.js"></script>
+  <script src="/static/js/domains.js"></script>
+  <script src="/static/js/logs.js"></script>
+</body>
+</html>
+
