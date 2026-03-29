@@ -31,8 +31,16 @@ if [ ! -d /etc/openvpn/easy-rsa/pki ]; then
   ./easyrsa init-pki
   EASYRSA_BATCH=1 ./easyrsa build-ca nopass
   EASYRSA_BATCH=1 ./easyrsa build-server-full server nopass
+  EASYRSA_BATCH=1 ./easyrsa gen-crl
   openvpn --genkey secret /etc/openvpn/ta.key
 fi
+
+if [ ! -f /etc/openvpn/easy-rsa/pki/crl.pem ]; then
+  cd /etc/openvpn/easy-rsa
+  EASYRSA_BATCH=1 ./easyrsa gen-crl
+fi
+
+chmod 644 /etc/openvpn/easy-rsa/pki/crl.pem
 
 install -d -m 0755 "$VENV_DIR"
 python3 -m venv "$VENV_DIR"
