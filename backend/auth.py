@@ -11,7 +11,7 @@ from backend.database import get_db
 from backend.models import AdminConfig
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
@@ -47,4 +47,3 @@ def get_current_admin(token: str = Depends(oauth2_scheme), db: Session = Depends
     if not admin:
         raise credentials_exception
     return subject
-

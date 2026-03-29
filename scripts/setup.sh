@@ -16,6 +16,7 @@ apt-get install -y \
 mkdir -p /etc/openvpn/ccd /var/log/openvpn /var/log/dnsmasq
 mkdir -p /etc/openvpn/server
 touch /var/log/openvpn/status.log /var/log/openvpn/openvpn.log /var/log/dnsmasq/queries.log
+touch /etc/dnsmasq.d/vpn-users.conf
 
 if ! grep -q '^net.ipv4.ip_forward=1' /etc/sysctl.conf; then
   echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf
